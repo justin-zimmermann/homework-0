@@ -10,15 +10,24 @@
 #
 
 library(shiny)
-load("~/learnings/edX-R-project/homework-0/test-validation-sets.RData")
+load("~/learnings/edX-R-project/homework-0/sets.RData")
 
 # Define server logic required to draw a histogram
 shinyServer(function(input, output) {
 
     output$distPlot <- renderPlot({
+        
+        validation_filtered <- validation
+        
+        if (input$genre != "All") {
+            validation_filtered <- validation_filtered[grepl(input$genre, validation_filtered$genres, fixed=TRUE) ,]
+        }
+        if (input$rating != "All") {
+            validation_filtered <- validation_filtered[input$rating == validation_filtered$rating ,]
+        }
 
         # generate bins based on input$bins from ui.R
-        x    <- validation$timestamp
+        x    <- validation_filtered$timestamp
         bins <- seq(min(x), max(x), length.out = input$bins + 1)
 
         # draw the histogram with the specified number of bins
@@ -28,7 +37,16 @@ shinyServer(function(input, output) {
     
     output$distPlot2 <- renderPlot({
         
-        x    <- validation$rating
+        validation_filtered <- validation
+        
+        if (input$genre != "All") {
+            validation_filtered <- validation_filtered[grepl(input$genre, validation_filtered$genres, fixed=TRUE) ,]
+        }
+        if (input$rating != "All") {
+            validation_filtered <- validation_filtered[input$rating == validation_filtered$rating ,]
+        }
+        
+        x    <- validation_filtered$rating
         bins <- seq(min(x), max(x), length.out = 10)
         
         # draw the histogram with the specified number of bins
@@ -38,14 +56,16 @@ shinyServer(function(input, output) {
     
     output$table <- DT::renderDataTable(DT::datatable({
         
-        data <- validation
+        validation_filtered <- validation
+        
         if (input$genre != "All") {
-            data <- data[grepl(input$genre, data$genres, fixed=TRUE) ,]
+            validation_filtered <- validation_filtered[grepl(input$genre, validation_filtered$genres, fixed=TRUE) ,]
         }
         if (input$rating != "All") {
-            data <- data[input$rating == data$rating ,]
+            validation_filtered <- validation_filtered[input$rating == validation_filtered$rating ,]
         }
-        data
+        
+        validation_filtered
         
     }))
 

@@ -53,3 +53,6 @@ edx <- rbind(edx, removed)
 # rm(dl, ratings, movies, test_index, temp, movielens, removed)
 
 rm(ratings, movies, test_index, temp, movielens, removed)
+
+saveRDS(edx, file = "edx.rds")
+saveRDS(validation, file = "validation.rds")

@@ -2,4 +2,6 @@
 *.Rhistory
 *.RData
 *.Ruserdata
+*.rds
 ml-10M100K/
+.Rproj.user
